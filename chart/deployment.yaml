@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: miniauth-deployment
+  labels:
+    app: miniauth
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: miniauth
+  template:
+    metadata:
+      labels:
+        app: miniauth
+    spec:
+      serviceAccountName: miniauth-sa
+      terminationGracePeriodSeconds: 1
+      containers:
+        - name: miniauth
+          image: "registry.k8s.blufo.gs/k8s/mini-auth"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 60
+            httpGet:
+              path: /healthz
+              port: http
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: SHARED_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: miniauth-secret
+                key: SHARED_SECRET
+          - name: URI_ROOT
+            valueFrom:
+              secretKeyRef:
+                name: miniauth-secret
+                key: URI_ROOT
+          - name: COOKIE_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: miniauth-secret
+                key: COOKIE_DOMAIN
+          - name: OPENID_CONFIG_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: miniauth-secret
+                key: OPENID_CONFIG_ENDPOINT
+          - name: OPENID_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: miniauth-secret
+                key: OPENID_CLIENT_ID
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux

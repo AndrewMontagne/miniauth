@@ -1,0 +1,5 @@
+aiohttp==3.12.13
+pyjwt==2.10.1
+basicauth==1.0.0
+cryptography==44.0.2
+cachetools==6.2.0

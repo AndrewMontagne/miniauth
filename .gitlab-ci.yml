@@ -1,0 +1,10 @@
+stages:
+  - build
+
+container:
+  stage: build
+  image: quay.io/podman/stable
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | podman login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - podman build . --squash -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}
+    - podman push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}
