@@ -49,6 +49,11 @@ spec:
               secretKeyRef:
                 name: miniauth-secret
                 key: COOKIE_DOMAIN
+          - name: EXPIRY_SECS
+            valueFrom:
+              secretKeyRef:
+                name: miniauth-secret
+                key: EXPIRY_SECS
           - name: OPENID_CONFIG_ENDPOINT
             valueFrom:
               secretKeyRef:

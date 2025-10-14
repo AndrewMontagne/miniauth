@@ -179,6 +179,11 @@ async def healthz(request: web.Request):
     return web.Response(body="OK! :)")
 
 
+@routes.get("/debugz")
+async def debugz(request: web.Request):
+    return web.Response(body=json.dumps(dict(request.headers)))
+
+
 async def get_openid_config():
     async with idp_request_lock:
         key = "openid_config"
