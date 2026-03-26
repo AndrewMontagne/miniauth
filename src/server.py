@@ -151,7 +151,7 @@ async def openid(request: web.Request):
     # Sanitise the groups before they go in the token
     groups = []
     for group in profile["groups"]:
-        groups.append(group.strip('/\ \n'))
+        groups.append(group.strip('/\\ \n'))
 
     # Assemble the JWT that will go in our auth cookie
     payload = {
