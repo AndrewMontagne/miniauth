@@ -147,11 +147,16 @@ async def openid(request: web.Request):
                     return web.Response(
                         body=f"Bad Token!\n\n{json.dumps(profile,indent=2)}", status=401
                     )
+                
+    # Sanitise the groups before they go in the token
+    groups = []
+    for group in profile["groups"]:
+        groups.append(group.strip('/\ \n'))
 
     # Assemble the JWT that will go in our auth cookie
     payload = {
         "uid": profile["email"],
-        "groups": profile["groups"],
+        "groups": groups,
         "token": body["refresh_token"],
     }
     payload["iat"] = int(time.time())
